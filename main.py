@@ -181,14 +181,15 @@ if uploaded_file is not None:
                 st.subheader('Dados da aba Comparativo')
                 st.write(comparativo_df)
             
+            
             with col11:
                 # Verificação se as colunas '2023' e '2024' estão presentes
-                if '2023' in comparativo_df.columns and '2024' in comparativo_df.columns:
+                if 'ano 2023' in comparativo_df.columns and 'ano 2024' in comparativo_df.columns:
                     # Plotar os gráficos para os dados de 2023 e 2024
                     st.subheader('Comparativo de Chamados 2023 vs 2024')
                     
                     fig, ax = plt.subplots(figsize=(10, 6))
-                    comparativo_df.plot(x='Mês', y=['2023', '2024'], kind='bar', ax=ax)
+                    comparativo_df.plot(x='Mês', y=['ano 2023', 'ano 2024'], kind='bar', ax=ax)
                     ax.set_xlabel('Mês')
                     ax.set_ylabel('Quantidade de Chamados')
                     ax.set_title('Comparativo de Chamados por Mês: 2023 vs 2024')
