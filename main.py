@@ -181,6 +181,7 @@ if uploaded_file is not None:
                 st.subheader('Dados da aba Comparativo')
                 st.write(comparativo_df)
             
+            
             with col11:
                 # Verificação se as colunas '2023' e '2024' estão presentes
                 if 'ano 2023' in comparativo_df.columns and 'ano 2024' in comparativo_df.columns:
