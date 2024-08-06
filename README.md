@@ -41,5 +41,5 @@ Siga as instruções no menu para escolher entre as diferentes operações dispo
 Contribuições são bem-vindas! Sinta-se à vontade para sugerir melhorias, relatar problemas ou enviar pull requests.
 
 ## Autores:
-
-Gustavo Coelho @IamsinCQFernandes
+- [Gustavo Coelho](https://github.com/Gustavo-gcr)
+- [Iasmin Fernandes](https://github.com/IasminCQFernandes)
