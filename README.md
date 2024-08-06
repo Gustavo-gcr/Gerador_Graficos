@@ -1,4 +1,4 @@
-# Análise de Categorias, Atendentes e Situações
+# Análise de Chamaodos
 
 Este é um aplicativo Streamlit(hospedado) para análise de dados de categorias, atendentes e situações a partir de um arquivo Excel. O aplicativo lê duas abas do Excel (`Comparativo` e `Worksheet`) e gera gráficos e tabelas a partir dos dados.
 
@@ -20,23 +20,17 @@ Certifique-se de ter o Python 3.x instalado em seu computador. Se não tiver, vo
 
 ### Executando o programa:
 
-1. Clone ou baixe o arquivo `banco.py` deste repositório.
-2. Abra um terminal ou prompt de comando e navegue até o diretório onde o arquivo `banco.py` está localizado.
-3. Digite `python banco.py` para iniciar o programa.
+1. Clone ou baixe o arquivo `main.py` deste repositório.
+2. Abra um terminal ou prompt de comando e navegue até o diretório onde o arquivo `main.py` está localizado.
+3. Digite `streamlit run main.py` para iniciar o programa.
 
 
 ## Como usar (2):
  Essa aplicação foi hospedada, se deseja testala diretamente sem precisar clonar o código faça os seguintes passos.
  
 1. Preencha um Excel para gerar os gráficos.
-2. Crie uma aba chamada "Comparativo" e la coloque como no exemplo abaixo:
-Mês	      ano 2023	  ano 2024
-janeiro	    15	        43
-fevereiro   120	        222
-março	      357	        328
-
-3. Clique no link para abrir a hospedagem: https://gerador-de-graficos.streamlit.app/
-4. Clique em "Browse Files" e escolha se Excel.
+2. Clique no link para abrir a hospedagem: https://gerador-de-graficos.streamlit.app/
+3. Clique em "Browse Files" e escolha se Excel.
 
 ### Operações disponíveis:
 
@@ -46,6 +40,6 @@ Siga as instruções no menu para escolher entre as diferentes operações dispo
 
 Contribuições são bem-vindas! Sinta-se à vontade para sugerir melhorias, relatar problemas ou enviar pull requests.
 
-## Autor:
+## Autores:
 
-Gustavo Coelho
+Gustavo Coelho @IamsinCQFernandes
