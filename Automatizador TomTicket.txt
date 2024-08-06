@@ -1,1 +1,0 @@
-https://gerador-graficos.streamlit.app/

@@ -1,1 +1,0 @@
-Adicionar filtro de qual foi a categoria em cada ano na aba comparativo
