@@ -61,7 +61,6 @@ if uploaded_file is not None:
                             textcoords='offset points')
                 
             col2.pyplot(fig)
-        
         with tab2:
             # Contagem das ocorrências de cada atendente
             attendant_counts = worksheet_df['Atendente'].value_counts()
