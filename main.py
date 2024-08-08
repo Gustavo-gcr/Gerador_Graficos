@@ -79,6 +79,7 @@ if uploaded_file is not None:
             ax.set_xlabel('Atendente')
             ax.set_ylabel('Contagem')
             
+            
             # Adicionando os valores no topo de cada barra
             for bar in bars.patches:
                 ax.annotate(format(bar.get_height(), '.0f'), 
