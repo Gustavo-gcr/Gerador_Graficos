@@ -17,6 +17,7 @@ if uploaded_file is not None:
     # Leitura das abas do arquivo Excel
     xls = pd.ExcelFile(uploaded_file)
     
+    
     # Leitura da aba "Comparativo" sem pular linhas
     comparativo_df = pd.read_excel(xls, sheet_name='Comparativo')
     
