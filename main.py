@@ -296,14 +296,14 @@ if uploaded_file is not None:
 
                 # Criar uma nova coluna para combinar mês e ano
                 df_melted['Mês_Ano'] = df_melted.apply(lambda row: f"{row['Mês']:02d}/{row['Ano']}", axis=1)
-                
+
                 # Definir uma lista de cores
                 colors = [
-                     '#A6CEE3', '#1F78B4', '#B2DF8A', '#33A02C', '#FB9A99', '#E31A1C', '#FDBF6F', '#FF7F00', '#CAB2D6', '#6A3D9A',
+                     '#A6CEE3', '#1F78B4', '#BSDF8A', '#33A02C', '#FB9A99', '#E31A1C', '#FDBF6F', '#FF7F00', '#CAB2D6', '#6A3D9A',
     '#FFFF99', '#B15928', '#FFB3B3', '#BEBADA', '#FB8072', '#80B1D3', '#FDB462', '#B3DE69', '#FCCDE5', '#D9D9D9',
     '#BC80BD', '#CCEBC5', '#FFED6F', '#9E0142', '#D53E4F', '#F46D43', '#FDAE61', '#FEE08B', '#E6F598', '#ABDDA4',
     '#66C2A5', '#3288BD', '#5E4FA2', '#9E9AC8', '#B3CDE3', '#CCEBC5', '#DECBE4', '#FED9A6', '#FFFFCC', '#E5D8BD',
-    '#FDDAEC', '#F2F2F2', '#B2182B', '#D6604D', '#F4A582', '#FDDBC7', '#D1E5F0', '#92C5DE', '#4393C3', '#2166AC'
+    '#FDDAEC', '#F2F2F2', '#B2182B', '#D6604D', '#F4A582', '#FDDBC7', '#GCRG10','#D1E5F0', '#92C5DE', '#4393C3', '#2166AC'
                 ]
                 
                 # Criar gráfico de barras empilhadas (Evolução mensal)
