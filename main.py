@@ -8,7 +8,7 @@ import plotly.graph_objects as go
 st.set_page_config(layout="wide")
 
 # Título do aplicativo
-st.title('Análise de Categorias, Atendentes e Situações')
+st.title('Relatório Mensal TomTicket')
 
 # Upload do arquivo Excel
 uploaded_file = st.file_uploader("Escolha o arquivo Excel", type="xlsx")
@@ -32,7 +32,7 @@ if uploaded_file is not None:
     required_columns = ['Categoria', 'Atendente', 'Origem do Chamado', 'Última Situação']
     if all(col in worksheet_df.columns for col in required_columns):
         # Criação das abas
-        tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs(["Análise por Categoria", "Análise por Atendente", "Painel do Atendente", "Situação", "Treinamento", "Comparativo Total Anual", "Comparativo Mês Anual", "Comparativo Categorias Anual"])
+        tab1, tab2, tab3, tab9, tab4, tab5, tab6, tab7, tab8  = st.tabs(["Análise por Categoria", "Análise por Atendente", "Painel do Atendente","Detalhamento de Atendente", "Situação", "Treinamento", "Comparativo Total Anual", "Comparativo Mês Anual", "Comparativo Categorias Anual"])
         
         with tab1:
             # Contagem das ocorrências de cada categoria
@@ -61,6 +61,7 @@ if uploaded_file is not None:
                             textcoords='offset points')
                 
             col2.pyplot(fig)
+            
         with tab2:
             # Contagem das ocorrências de cada atendente
             attendant_counts = worksheet_df['Atendente'].value_counts()
@@ -93,24 +94,25 @@ if uploaded_file is not None:
         with tab3:
             # Filtrando os dados pela coluna "Origem do Chamado" para "Painel do Atendente"
             painel_df = worksheet_df[worksheet_df['Origem do Chamado'] == 'Painel do Atendente']
-            
+
             # Contagem das ocorrências de cada atendente no Painel do Atendente
             painel_attendant_counts = painel_df['Atendente'].value_counts()
-            
+
             # Criação de colunas para layout
             col5, col6 = st.columns(2)
-            
+
             # Exibição da tabela de contagem
             col5.subheader('Contagem de Atendentes (Painel do Atendente)')
             col5.write(painel_attendant_counts)
-            
+
             # Criação do gráfico
-            col6.subheader('Gráfico de Atendentes (Painel do Atendente)')
+            col6.subheader('Gráfico de Atendentes')
             fig, ax = plt.subplots()
-            bars = painel_attendant_counts.plot(kind='bar', ax=ax)
+            bars = painel_attendant_counts.plot(kind='bar', ax=ax, color='skyblue', edgecolor='black')
             ax.set_xlabel('Atendente')
             ax.set_ylabel('Contagem')
-            
+            ax.set_title('Quantidade de Atendimentos criados pelo proprio atendente')
+
             # Adicionando os valores no topo de cada barra
             for bar in bars.patches:
                 ax.annotate(format(bar.get_height(), '.0f'), 
@@ -118,9 +120,34 @@ if uploaded_file is not None:
                             ha='center', va='center', 
                             size=10, xytext=(0, 8), 
                             textcoords='offset points')
-                
+                        
             col6.pyplot(fig)
-        
+
+            # Mini planilha com categorias por atendente
+            st.subheader("Categorias por Atendente")
+            categories_by_attendant = painel_df.groupby(['Atendente', 'Categoria']).size().unstack(fill_value=0)
+            st.write(categories_by_attendant)
+
+        with tab9:
+            st.subheader('Detalhamento de chamados criados por Atendente ')
+
+            # Filtrando os dados pela coluna "Origem do Chamado" para incluir apenas "Painel do Atendente"
+            painel_atendente_df = worksheet_df[worksheet_df['Origem do Chamado'] == 'Painel do Atendente']
+            
+            # Contagem de categorias, mas não vamos exibir isso
+            contagem_categorias = painel_atendente_df.groupby(['Atendente', 'Categoria']).size().reset_index(name='Quantidade')
+
+            # Seletor para o atendente específico
+            selected_attendant = st.selectbox("Selecione o atendente para visualizar detalhes", contagem_categorias['Atendente'].unique())
+            
+            # Filtrando os detalhes dos chamados para o atendente selecionado e origem "Painel do Atendente"
+            chamados_detalhados = painel_atendente_df[painel_atendente_df['Atendente'] == selected_attendant]
+
+            # Exibindo os detalhes do chamado
+            st.write(f"Chamados detalhados para o atendente {selected_attendant} no Painel do Atendente:")
+            st.write(chamados_detalhados[['Protocolo', 'Assunto', 'Categoria', 'Última Situação']])
+
+       
         with tab4:
             # Contagem das ocorrências de cada situação
             situacao_counts = worksheet_df['Última Situação'].value_counts()
