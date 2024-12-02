@@ -129,24 +129,24 @@ if uploaded_file is not None:
             categories_by_attendant = painel_df.groupby(['Atendente', 'Categoria']).size().unstack(fill_value=0)
             st.write(categories_by_attendant)
 
-        with tab9:
-            st.subheader('Detalhamento de chamados criados por Atendente ')
+        # with tab9:
+        #     st.subheader('Detalhamento de chamados criados por Atendente ')
 
-            # Filtrando os dados pela coluna "Origem do Chamado" para incluir apenas "Painel do Atendente"
-            painel_atendente_df = worksheet_df[worksheet_df['Origem do Chamado'] == 'Painel do Atendente']
+        #     # Filtrando os dados pela coluna "Origem do Chamado" para incluir apenas "Painel do Atendente"
+        #     painel_atendente_df = worksheet_df[worksheet_df['Origem do Chamado'] == 'Painel do Atendente']
             
-            # Contagem de categorias, mas não vamos exibir isso
-            contagem_categorias = painel_atendente_df.groupby(['Atendente', 'Categoria']).size().reset_index(name='Quantidade')
+        #     # Contagem de categorias, mas não vamos exibir isso
+        #     contagem_categorias = painel_atendente_df.groupby(['Atendente', 'Categoria']).size().reset_index(name='Quantidade')
 
-            # Seletor para o atendente específico
-            selected_attendant = st.selectbox("Selecione o atendente para visualizar detalhes", contagem_categorias['Atendente'].unique())
+        #     # Seletor para o atendente específico
+        #     selected_attendant = st.selectbox("Selecione o atendente para visualizar detalhes", contagem_categorias['Atendente'].unique())
             
-            # Filtrando os detalhes dos chamados para o atendente selecionado e origem "Painel do Atendente"
-            chamados_detalhados = painel_atendente_df[painel_atendente_df['Atendente'] == selected_attendant]
+        #     # Filtrando os detalhes dos chamados para o atendente selecionado e origem "Painel do Atendente"
+        #     chamados_detalhados = painel_atendente_df[painel_atendente_df['Atendente'] == selected_attendant]
 
-            # Exibindo os detalhes do chamado
-            st.write(f"Chamados detalhados para o atendente {selected_attendant} no Painel do Atendente:")
-            st.write(chamados_detalhados[['Protocolo', 'Assunto', 'Categoria', 'Última Situação']])
+        #     # Exibindo os detalhes do chamado
+        #     st.write(f"Chamados detalhados para o atendente {selected_attendant} no Painel do Atendente:")
+        #     st.write(chamados_detalhados[['Protocolo', 'Assunto', 'Categoria', 'Última Situação']])
 
        
         with tab4:
