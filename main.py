@@ -33,7 +33,7 @@ if uploaded_file is not None:
     required_columns = ['Categoria', 'Atendente', 'Origem do Chamado', 'Última Situação']
     if all(col in worksheet_df.columns for col in required_columns):
         # Criação das abas
-        tab1, tab2, tab3, tab9, tab4, tab5, tab6, tab7, tab8  = st.tabs(["Análise por Categoria", "Análise por Atendente", "Painel do Atendente","Detalhamento de Atendente", "Situação", "Treinamento", "Comparativo Total Anual", "Comparativo Mês Anual", "Comparativo Categorias Anual"])
+        tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8  = st.tabs(["Análise por Categoria", "Análise por Atendente", "Painel do Atendente","Situação", "Treinamento", "Comparativo Total Anual", "Comparativo Mês Anual", "Comparativo Categorias Anual"])
         
         with tab1:
             # Contagem das ocorrências de cada categoria
