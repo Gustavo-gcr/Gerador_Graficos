@@ -33,7 +33,7 @@ if uploaded_file is not None:
     required_columns = ['Categoria', 'Atendente', 'Origem do Chamado', 'Última Situação']
     if all(col in worksheet_df.columns for col in required_columns):
         # Criação das abas
-        tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8  = st.tabs(["Análise por Categoria", "Análise por Atendente", "Painel do Atendente","Situação", "Treinamento", "Comparativo Total Anual", "Comparativo Mês Anual", "Comparativo Categorias Anual"])
+        tab1, tab2, tab3,tab9, tab4, tab5, tab6, tab7, tab8  = st.tabs(["Análise por Categoria", "Análise por Atendente", "Painel do Atendente","Situação", "Treinamento", "Comparativo Total Anual", "Comparativo Mês Anual", "Comparativo Categorias Anual"])
         
         with tab1:
             # Contagem das ocorrências de cada categoria
@@ -121,7 +121,7 @@ if uploaded_file is not None:
                             ha='center', va='center', 
                             size=10, xytext=(0, 8), 
                             textcoords='offset points')
-                        
+                          
             col6.pyplot(fig)
 
             # Mini planilha com categorias por atendente
@@ -130,23 +130,58 @@ if uploaded_file is not None:
             st.write(categories_by_attendant)
 
         # with tab9:
-        #     st.subheader('Detalhamento de chamados criados por Atendente ')
+          
+        #     # Verificar se as colunas necessárias existem
+        #     required_columns = ['Origem do Chamado', 'Última Situação', 'Atendente', 'Categoria', 'Protocolo', 'Assunto']
+        #     if not all(col in worksheet_df.columns for col in required_columns):
+        #         st.error("O arquivo de dados não contém todas as colunas necessárias.")
+        #     else:
+        #         # Filtrar dados onde o atendente criou e também atendeu os chamados
+        #         criados_e_atendidos_df = worksheet_df[
+        #             (worksheet_df['Origem do Chamado'] == 'Painel do Atendente') &
+        #             (worksheet_df['Última Situação'].str.contains('Atendido', na=False))
+        #         ]
 
-        #     # Filtrando os dados pela coluna "Origem do Chamado" para incluir apenas "Painel do Atendente"
-        #     painel_atendente_df = worksheet_df[worksheet_df['Origem do Chamado'] == 'Painel do Atendente']
-            
-        #     # Contagem de categorias, mas não vamos exibir isso
-        #     contagem_categorias = painel_atendente_df.groupby(['Atendente', 'Categoria']).size().reset_index(name='Quantidade')
+        #         if criados_e_atendidos_df.empty:
+        #             st.warning("Nenhum chamado criado e atendido encontrado.")
+        #         else:
+        #             # Contagem de categorias por atendente
+        #             contagem_categorias = (
+        #                 criados_e_atendidos_df.groupby(['Atendente', 'Categoria'])
+        #                 .size()
+        #                 .reset_index(name='Quantidade')
+        #             )
 
-        #     # Seletor para o atendente específico
-        #     selected_attendant = st.selectbox("Selecione o atendente para visualizar detalhes", contagem_categorias['Atendente'].unique())
-            
-        #     # Filtrando os detalhes dos chamados para o atendente selecionado e origem "Painel do Atendente"
-        #     chamados_detalhados = painel_atendente_df[painel_atendente_df['Atendente'] == selected_attendant]
+        #             # Seletor para o atendente específico
+        #             selected_attendant = st.selectbox(
+        #                 "Selecione o atendente para visualizar detalhes",
+        #                 contagem_categorias['Atendente'].unique()
+        #             )
 
-        #     # Exibindo os detalhes do chamado
-        #     st.write(f"Chamados detalhados para o atendente {selected_attendant} no Painel do Atendente:")
-        #     st.write(chamados_detalhados[['Protocolo', 'Assunto', 'Categoria', 'Última Situação']])
+        #             # Filtrar os detalhes dos chamados para o atendente selecionado
+        #             detalhes_chamados = criados_e_atendidos_df[criados_e_atendidos_df['Atendente'] == selected_attendant]
+
+        #             # Exibir os detalhes dos chamados
+        #             st.write(f"Chamados criados e atendidos pelo atendente {selected_attendant}:")
+        #             st.dataframe(detalhes_chamados[['Protocolo', 'Assunto', 'Categoria', 'Última Situação']])
+
+        #             # Gerar gráfico para visualização
+        #             st.subheader(f"Gráfico de Chamados por Categoria para {selected_attendant}")
+        #             if not detalhes_chamados.empty:
+        #                 categoria_counts = detalhes_chamados['Categoria'].value_counts().reset_index()
+        #                 categoria_counts.columns = ['Categoria', 'Quantidade']
+
+        #                 fig = px.bar(
+        #                     categoria_counts,
+        #                     x='Categoria',
+        #                     y='Quantidade',
+        #                     labels={'Categoria': 'Categoria', 'Quantidade': 'Quantidade'},
+        #                     title=f"Chamados por Categoria - {selected_attendant}",
+        #                     text_auto=True
+        #                 )
+        #                 st.plotly_chart(fig)
+        #             else:
+        #                 st.warning("Nenhum chamado encontrado para o atendente selecionado.")
 
        
         with tab4:
