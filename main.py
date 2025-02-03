@@ -21,7 +21,7 @@ if uploaded_file is not None:
     # Leitura da aba "Comparativo" sem pular linhas
     comparativo_df = pd.read_excel(xls, sheet_name='Comparativo')
     
-    comparativo_detalhado_df = pd.read_excel(xls, sheet_name='Comparativo Detalhado')
+    comparativo_detalhado_df = pd.read_excel(xls, sheet_name='Comparativo Detalhado') 
     
     # Leitura da aba "Worksheet" pulando as 5 primeiras linhas
     worksheet_df = pd.read_excel(xls, sheet_name='Worksheet', header=5)
@@ -33,8 +33,7 @@ if uploaded_file is not None:
     required_columns = ['Categoria', 'Atendente', 'Origem do Chamado', 'Última Situação']
     if all(col in worksheet_df.columns for col in required_columns):
         # Criação das abas
-        tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8  = st.tabs(["Análise por Categoria", "Análise por Atendente", "Painel do Atendente","Situação", "Treinamento", "Comparativo Total Anual", "Comparativo Mês Anual", "Comparativo Categorias Anual"])
-        
+        tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8  = st.tabs(["Análise por Categoria", "Análise por Atendente", "Painel do Atendente","Situação", "Treinamento", "Comparativo Total Anual", "Comparativo Mês Anual", "Comparativo Categorias Anual"])  
         with tab1:
             # Contagem das ocorrências de cada categoria
             category_counts = worksheet_df['Categoria'].value_counts()
@@ -61,8 +60,7 @@ if uploaded_file is not None:
                             size=10, xytext=(0, 8), 
                             textcoords='offset points')
                 
-            col2.pyplot(fig)
-            
+            col2.pyplot(fig)   
         with tab2:
             # Contagem das ocorrências de cada atendente
             attendant_counts = worksheet_df['Atendente'].value_counts()
@@ -91,7 +89,6 @@ if uploaded_file is not None:
                             textcoords='offset points')
                 
             col4.pyplot(fig)
-        
         with tab3:
             # Filtrando os dados pela coluna "Origem do Chamado" para "Painel do Atendente"
             painel_df = worksheet_df[worksheet_df['Origem do Chamado'] == 'Painel do Atendente']
@@ -113,7 +110,6 @@ if uploaded_file is not None:
             ax.set_xlabel('Atendente')
             ax.set_ylabel('Contagem')
             ax.set_title('Quantidade de Atendimentos criados pelo proprio atendente')
-
             # Adicionando os valores no topo de cada barra
             for bar in bars.patches:
                 ax.annotate(format(bar.get_height(), '.0f'), 
@@ -123,67 +119,13 @@ if uploaded_file is not None:
                             textcoords='offset points')
                           
             col6.pyplot(fig)
-
             # Mini planilha com categorias por atendente
             st.subheader("Categorias por Atendente")
             categories_by_attendant = painel_df.groupby(['Atendente', 'Categoria']).size().unstack(fill_value=0)
             st.write(categories_by_attendant)
-
         # with tab9:
-          
-        #     # Verificar se as colunas necessárias existem
-        #     required_columns = ['Origem do Chamado', 'Última Situação', 'Atendente', 'Categoria', 'Protocolo', 'Assunto']
-        #     if not all(col in worksheet_df.columns for col in required_columns):
-        #         st.error("O arquivo de dados não contém todas as colunas necessárias.")
-        #     else:
-        #         # Filtrar dados onde o atendente criou e também atendeu os chamados
-        #         criados_e_atendidos_df = worksheet_df[
-        #             (worksheet_df['Origem do Chamado'] == 'Painel do Atendente') &
-        #             (worksheet_df['Última Situação'].str.contains('Atendido', na=False))
-        #         ]
-
-        #         if criados_e_atendidos_df.empty:
-        #             st.warning("Nenhum chamado criado e atendido encontrado.")
-        #         else:
-        #             # Contagem de categorias por atendente
-        #             contagem_categorias = (
-        #                 criados_e_atendidos_df.groupby(['Atendente', 'Categoria'])
-        #                 .size()
-        #                 .reset_index(name='Quantidade')
-        #             )
-
-        #             # Seletor para o atendente específico
-        #             selected_attendant = st.selectbox(
-        #                 "Selecione o atendente para visualizar detalhes",
-        #                 contagem_categorias['Atendente'].unique()
-        #             )
-
-        #             # Filtrar os detalhes dos chamados para o atendente selecionado
-        #             detalhes_chamados = criados_e_atendidos_df[criados_e_atendidos_df['Atendente'] == selected_attendant]
-
-        #             # Exibir os detalhes dos chamados
-        #             st.write(f"Chamados criados e atendidos pelo atendente {selected_attendant}:")
-        #             st.dataframe(detalhes_chamados[['Protocolo', 'Assunto', 'Categoria', 'Última Situação']])
-
-        #             # Gerar gráfico para visualização
-        #             st.subheader(f"Gráfico de Chamados por Categoria para {selected_attendant}")
-        #             if not detalhes_chamados.empty:
-        #                 categoria_counts = detalhes_chamados['Categoria'].value_counts().reset_index()
-        #                 categoria_counts.columns = ['Categoria', 'Quantidade']
-
-        #                 fig = px.bar(
-        #                     categoria_counts,
-        #                     x='Categoria',
-        #                     y='Quantidade',
-        #                     labels={'Categoria': 'Categoria', 'Quantidade': 'Quantidade'},
-        #                     title=f"Chamados por Categoria - {selected_attendant}",
-        #                     text_auto=True
-        #                 )
-        #                 st.plotly_chart(fig)
-        #             else:
-        #                 st.warning("Nenhum chamado encontrado para o atendente selecionado.")
-
-       
+        #        Nova atualização para primeiro semestre de 2025, puxar os chamados detalhados dos atendentes verificando qual é a origem dos chamados criados pelos 
+        #        prórpios atendentes.  
         with tab4:
             # Contagem das ocorrências de cada situação
             situacao_counts = worksheet_df['Última Situação'].value_counts()
@@ -208,10 +150,8 @@ if uploaded_file is not None:
                             (bar.get_x() + bar.get_width() / 2, bar.get_height()), 
                             ha='center', va='center', 
                             size=10, xytext=(0, 8), 
-                            textcoords='offset points')
-                
+                            textcoords='offset points')      
             col8.pyplot(fig)
-
         with tab5:
             # Filtrando os dados pela coluna "Categoria" para "Treinamento"
             treinamento_df = worksheet_df[worksheet_df['Categoria'] == 'Treinamento']
@@ -242,7 +182,6 @@ if uploaded_file is not None:
                             textcoords='offset points')
                 
             col10.pyplot(fig)
-        
         with tab6:
             # Exibição dos dados da aba "Comparativo"
             col10, col11 = st.columns(2)
@@ -270,7 +209,6 @@ if uploaded_file is not None:
                     st.pyplot(fig)
                 else:
                     st.error('As colunas "2024" e/ou "2025" não foram encontradas na aba "Comparativo".')
-
         with tab7:
             # Criação do gráfico de comparação
             st.subheader('Comparativo de Chamados por Mês entre Anos')
@@ -305,8 +243,7 @@ if uploaded_file is not None:
             col1, col2, col3 = st.columns([1.5, 0.75, 0.75])
             
             with col1:
-                st.plotly_chart(fig)
-            
+                st.plotly_chart(fig)      
             with col2:
                 if selected_month:
                     st.subheader(f'(2024)')
@@ -408,7 +345,6 @@ if uploaded_file is not None:
 
                 # Criar gráfico de barras (Totais anuais por categoria)
                 fig_totais_categoria = go.Figure()
-
                 # Adicionar traços para cada categoria
                 for categoria in selected_categories:
                     if categoria in total_ano_categoria.columns:
@@ -419,7 +355,6 @@ if uploaded_file is not None:
                             text=total_ano_categoria[categoria],
                             textposition='auto'
                         ))
-
                 # Configurar layout do gráfico de totais anuais por categoria
                 fig_totais_categoria.update_layout(
                     title='Comparação Total por Categoria (2024 vs 2025)',
@@ -428,7 +363,6 @@ if uploaded_file is not None:
                     barmode='group',
                     legend_title='Categoria'
                 )
-
                 st.plotly_chart(fig_totais_categoria)
             else:
                 st.info('Por favor, selecione pelo menos uma categoria.')
