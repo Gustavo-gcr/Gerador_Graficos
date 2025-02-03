@@ -1,4 +1,4 @@
-# Análise de Chamaodos
+# Análise de Chamados
 
 Este é um aplicativo Streamlit(hospedado) para análise de dados de categorias, atendentes e situações a partir de um arquivo Excel. O aplicativo lê duas abas do Excel (`Comparativo` e `Worksheet`) e gera gráficos e tabelas a partir dos dados.
 
