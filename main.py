@@ -252,16 +252,16 @@ if uploaded_file is not None:
                 st.write(comparativo_df)
             
             with col11:
-                # Verificação se as colunas '2023' e '2024' estão presentes
-                if 'ano 2023' in comparativo_df.columns and 'ano 2024' in comparativo_df.columns:
-                    # Plotar os gráficos para os dados de 2023 e 2024
-                    st.subheader('Comparativo de Chamados 2023 vs 2024')
+                # Verificação se as colunas '2024' e '2025' estão presentes
+                if 'ano 2024' in comparativo_df.columns and 'ano 2025' in comparativo_df.columns:
+                    # Plotar os gráficos para os dados de 2024 e 2025
+                    st.subheader('Comparativo de Chamados 2024 vs 2025')
                     
                     fig, ax = plt.subplots(figsize=(10, 6))
-                    comparativo_df.plot(x='Mês', y=['ano 2023', 'ano 2024'], kind='bar', ax=ax)
+                    comparativo_df.plot(x='Mês', y=['ano 2024', 'ano 2025'], kind='bar', ax=ax)
                     ax.set_xlabel('Mês')
                     ax.set_ylabel('Quantidade de Chamados')
-                    ax.set_title('Comparativo de Chamados por Mês: 2023 vs 2024')
+                    ax.set_title('Comparativo de Chamados por Mês: 2024 vs 2025')
                     
                     # Adicionando os valores no topo de cada barra
                     for container in ax.containers:
@@ -269,7 +269,7 @@ if uploaded_file is not None:
                     
                     st.pyplot(fig)
                 else:
-                    st.error('As colunas "2023" e/ou "2024" não foram encontradas na aba "Comparativo".')
+                    st.error('As colunas "2024" e/ou "2025" não foram encontradas na aba "Comparativo".')
 
         with tab7:
             # Criação do gráfico de comparação
@@ -309,15 +309,6 @@ if uploaded_file is not None:
             
             with col2:
                 if selected_month:
-                    st.subheader(f'(2023)')
-                    
-                    # Contagem de categorias para 2023
-                    categoria_counts_2023 = comparativo_detalhado_df[(comparativo_detalhado_df['Mês'] == selected_month) & (comparativo_detalhado_df['Ano'] == 2023)].sum(numeric_only=True)
-                    
-                    # Exibição das contagens detalhadas em caixas
-                    st.write(categoria_counts_2023)
-            with col3:
-                if selected_month:
                     st.subheader(f'(2024)')
                     
                     # Contagem de categorias para 2024
@@ -325,6 +316,15 @@ if uploaded_file is not None:
                     
                     # Exibição das contagens detalhadas em caixas
                     st.write(categoria_counts_2024)
+            with col3:
+                if selected_month:
+                    st.subheader(f'(2025)')
+                    
+                    # Contagem de categorias para 2024
+                    categoria_counts_2025 = comparativo_detalhado_df[(comparativo_detalhado_df['Mês'] == selected_month) & (comparativo_detalhado_df['Ano'] == 2025)].sum(numeric_only=True)
+                    
+                    # Exibição das contagens detalhadas em caixas
+                    st.write(categoria_counts_2025)
                 else:
                     st.error("A aba 'Comparativo Detalhado' não foi encontrada no arquivo Excel.")
         with tab8:
@@ -337,7 +337,7 @@ if uploaded_file is not None:
             selected_categories = st.multiselect('Selecione as categorias', categorias)
             
             # Seletor de ano(s)
-            selected_years = [2023, 2024]  # Definido para os anos 2023 e 2024
+            selected_years = [2024, 2025]  # Definido para os anos 2024 e 2025
 
             if selected_categories:
                 # Filtrar os dados para as categorias selecionadas
@@ -387,17 +387,17 @@ if uploaded_file is not None:
                 
                 # Configurar layout do gráfico de barras empilhadas
                 fig.update_layout(
-                    title='Evolução das Categorias por Mês (2023-2024)',
+                    title='Evolução das Categorias por Mês (2024-2025)',
                     xaxis_title='Mês/Ano',
                     yaxis_title='Quantidade',
                     barmode='stack',  # Empilha as barras
                     xaxis=dict(
                         tickmode='array',
-                        tickvals=[f"{month:02d}/2023" for month in range(1, 13)] + [f"{month:02d}/2024" for month in range(1, 13)],
-                        ticktext=['janeiro 2023', 'fevereiro 2023', 'março 2023', 'abril 2023', 'maio 2023', 'junho 2023',
-                                'julho 2023', 'agosto 2023', 'setembro 2023', 'outubro 2023', 'novembro 2023', 'dezembro 2023',
-                                'janeiro 2024', 'fevereiro 2024', 'março 2024', 'abril 2024', 'maio 2024', 'junho 2024',
-                                'julho 2024', 'agosto 2024', 'setembro 2024', 'outubro 2024', 'novembro 2024', 'dezembro 2024']
+                        tickvals=[f"{month:02d}/2024" for month in range(1, 13)] + [f"{month:02d}/2025" for month in range(1, 13)],
+                        ticktext=['janeiro 2024', 'fevereiro 2024', 'março 2024', 'abril 2024', 'maio 2024', 'junho 2024',
+                                'julho 2024', 'agosto 2024', 'setembro 2024', 'outubro 2024', 'novembro 2024', 'dezembro 2024',
+                                'janeiro 2025', 'fevereiro 2025', 'março 2025', 'abril 2025', 'maio 2025', 'junho 2025',
+                                'julho 2025', 'agosto 2025', 'setembro 2025', 'outubro 2025', 'novembro 2025', 'dezembro 2025']
                     ),
                     legend_title='Categoria e Ano'
                 )
@@ -422,7 +422,7 @@ if uploaded_file is not None:
 
                 # Configurar layout do gráfico de totais anuais por categoria
                 fig_totais_categoria.update_layout(
-                    title='Comparação Total por Categoria (2023 vs 2024)',
+                    title='Comparação Total por Categoria (2024 vs 2025)',
                     xaxis_title='Ano',
                     yaxis_title='Quantidade Total',
                     barmode='group',
