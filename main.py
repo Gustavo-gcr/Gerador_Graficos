@@ -25,6 +25,10 @@ if uploaded_file is not None:
     
     # Leitura da aba "Worksheet" pulando as 5 primeiras linhas
     worksheet_df = pd.read_excel(xls, sheet_name='Worksheet', header=5)
+    
+    worksheet_df['Superintendente'] = worksheet_df['Nome do Superintendente (Chamado Externo)'] \
+    .combine_first(worksheet_df['Nome do Superintendente (Cadastro de Cliente)']) \
+    .fillna('')
 
     # Leitura da aba "Comparativo Detalhado"
     comparativo_detalhado_df = pd.read_excel(xls, sheet_name='Comparativo Detalhado')
@@ -33,7 +37,7 @@ if uploaded_file is not None:
     required_columns = ['Categoria', 'Atendente', 'Origem do Chamado', 'Última Situação']
     if all(col in worksheet_df.columns for col in required_columns):
         # Criação das abas
-        tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8  = st.tabs(["Análise por Categoria", "Análise por Atendente", "Painel do Atendente","Situação", "Treinamento", "Comparativo Total Anual", "Comparativo Mês Anual", "Comparativo Categorias Anual"])  
+        tab1,tab_super, tab2, tab3,tab_detalhamento, tab4, tab5, tab6, tab7, tab8  = st.tabs(["Análise por Categoria","Análise por Categoria Superintendente", "Análise por Atendente", "Painel do Atendente","Detalhamento por Atendente","Situação", "Treinamento", "Comparativo Total Anual", "Comparativo Mês Anual", "Comparativo Categorias Anual"])  
         with tab1:
             # Contagem das ocorrências de cada categoria
             category_counts = worksheet_df['Categoria'].value_counts()
@@ -61,6 +65,41 @@ if uploaded_file is not None:
                             textcoords='offset points')
                 
             col2.pyplot(fig)   
+        
+        with tab_super:
+            st.subheader('Análise por Categoria Superintendente')
+            # Seletor de Superintendente
+            sup_options = worksheet_df['Superintendente'].unique()
+            selected_sup = st.selectbox('Selecione o Superintendente', sup_options)
+            
+            # Filtrar dados para o superintendente selecionado
+            df_sup = worksheet_df[worksheet_df['Superintendente'] == selected_sup]
+            
+            # Contagem das ocorrências de cada categoria para o superintendente selecionado
+            category_counts_sup = df_sup['Categoria'].value_counts()
+            
+            # Criação de colunas para layout
+            col_sup1, col_sup2 = st.columns(2)
+            
+            col_sup1.subheader('Contagem de Categorias')
+            col_sup1.write(category_counts_sup)
+            
+            # Criação do gráfico
+            col_sup2.subheader('Gráfico de Categorias')
+            fig_sup, ax_sup = plt.subplots()
+            category_counts_sup.plot(kind='bar', ax=ax_sup)
+            ax_sup.set_xlabel('Categoria')
+            ax_sup.set_ylabel('Contagem')
+            # Adicionando os valores no topo de cada barra
+            for bar in ax_sup.patches:
+                ax_sup.annotate(format(bar.get_height(), '.0f'),
+                                (bar.get_x() + bar.get_width() / 2, bar.get_height()),
+                                ha='center', va='bottom',
+                                fontsize=10, xytext=(0, 5),
+                                textcoords='offset points')
+            # Exibir gráfico no Streamlit
+            col_sup2.pyplot(fig_sup)
+    
         with tab2:
             # Contagem das ocorrências de cada atendente
             attendant_counts = worksheet_df['Atendente'].value_counts()
@@ -123,9 +162,58 @@ if uploaded_file is not None:
             st.subheader("Categorias por Atendente")
             categories_by_attendant = painel_df.groupby(['Atendente', 'Categoria']).size().unstack(fill_value=0)
             st.write(categories_by_attendant)
-        # with tab9:
-        #        Nova atualização para primeiro semestre de 2025, puxar os chamados detalhados dos atendentes verificando qual é a origem dos chamados criados pelos 
-        #        prórpios atendentes.  
+            
+        with tab_detalhamento:
+            st.subheader("Detalhamento por Atendente (Chamados Criados)")
+
+            # Filtrar para mostrar somente chamados criados pelo próprio atendente
+            painel_df = worksheet_df[worksheet_df['Origem do Chamado'] == 'Painel do Atendente']
+
+            # Lista de atendentes que realmente criaram chamados
+            attendants_options = painel_df['Atendente'].unique()
+
+            # Seletor de Atendente
+            selected_attendant = st.selectbox(
+                "Selecione o Atendente",
+                attendants_options,
+                key="select_atendente_criado"
+            )
+
+            # Filtrar somente para o atendente selecionado
+            df_attendant = painel_df[painel_df['Atendente'] == selected_attendant]
+
+            # Contagem de chamadas por categoria para esse atendente
+            category_counts = df_attendant['Categoria'].value_counts()
+
+            # Layout em colunas
+            col1, col2 = st.columns(2)
+
+            # 1) Tabela com contagem de categorias
+            col1.subheader(f"Contagem de Categorias (Criados por {selected_attendant})")
+            col1.write(category_counts)
+
+            # 2) Gráfico de barras com contagem de categorias
+            col2.subheader(f"Gráfico de Categorias (Criados por {selected_attendant})")
+            fig, ax = plt.subplots()
+            bars = category_counts.plot(kind='bar', ax=ax, color='skyblue', edgecolor='black')
+            ax.set_xlabel("Categoria")
+            ax.set_ylabel("Contagem")
+            ax.set_title(f"Chamados criados por {selected_attendant}")
+
+            # Adiciona os valores acima das barras
+            for bar in bars.patches:
+                ax.annotate(format(bar.get_height(), '.0f'),
+                            (bar.get_x() + bar.get_width() / 2, bar.get_height()),
+                            ha='center', va='bottom',
+                            size=10, xytext=(0, 5),
+                            textcoords='offset points')
+
+            col2.pyplot(fig)
+
+            # Verificar: tabela pivotada com Atendente vs Categoria
+            # st.subheader("Detalhamento de Chamados (Pivot)")
+            # categories_by_attendant = df_attendant.groupby(['Atendente', 'Categoria']).size().unstack(fill_value=0)
+            # st.write(categories_by_attendant)
         with tab4:
             # Contagem das ocorrências de cada situação
             situacao_counts = worksheet_df['Última Situação'].value_counts()
