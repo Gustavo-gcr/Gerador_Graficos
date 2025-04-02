@@ -46,7 +46,7 @@ if uploaded_file is not None:
             col1, col2 = st.columns(2)
             
             # Exibição da tabela de contagem
-            col1.subheader('Contagem de Categorias')
+            col1.subheader('Contagem Chamados por Categorias')
             col1.write(category_counts)
             
             # Criação do gráfico
@@ -67,7 +67,7 @@ if uploaded_file is not None:
             col2.pyplot(fig)   
         
         with tab_super:
-            st.subheader('Análise por Categoria Superintendente')
+            st.subheader('Análise Quantidade de Categoria por Superintendente')
             # Seletor de Superintendente
             sup_options = worksheet_df['Superintendente'].unique()
             selected_sup = st.selectbox('Selecione o Superintendente', sup_options)
@@ -108,7 +108,7 @@ if uploaded_file is not None:
             col3, col4 = st.columns(2)
             
             # Exibição da tabela de contagem
-            col3.subheader('Contagem de Atendentes')
+            col3.subheader('Contagem de Chamados por cada Atendente')
             col3.write(attendant_counts)
             
             # Criação do gráfico
@@ -128,79 +128,109 @@ if uploaded_file is not None:
                             textcoords='offset points')
                 
             col4.pyplot(fig)
-        with tab3:
-            # Filtrando os dados pela coluna "Origem do Chamado" para "Painel do Atendente"
-            painel_df = worksheet_df[worksheet_df['Origem do Chamado'] == 'Painel do Atendente']
+        # with tab3:
+        #     # Filtrando os dados pela coluna "Origem do Chamado" para "Painel do Atendente"
+        #     painel_df = worksheet_df[worksheet_df['Origem do Chamado'] == 'Painel do Atendente']
 
-            # Contagem das ocorrências de cada atendente no Painel do Atendente
+        #     # Contagem das ocorrências de cada atendente no Painel do Atendente
+        #     painel_attendant_counts = painel_df['Atendente'].value_counts()
+
+        #     # Criação de colunas para layout
+        #     col5, col6 = st.columns(2)
+
+        #     # Exibição da tabela de contagem
+        #     col5.subheader('Contagem de Atendentes (Painel do Atendente)')
+        #     col5.write(painel_attendant_counts)
+
+        #     # Criação do gráfico
+        #     col6.subheader('Gráfico de Atendentes')
+        #     fig, ax = plt.subplots()
+        #     bars = painel_attendant_counts.plot(kind='bar', ax=ax, color='skyblue', edgecolor='black')
+        #     ax.set_xlabel('Atendente')
+        #     ax.set_ylabel('Contagem')
+        #     ax.set_title('Quantidade de Atendimentos criados pelo proprio atendente')
+        #     # Adicionando os valores no topo de cada barra
+        #     for bar in bars.patches:
+        #         ax.annotate(format(bar.get_height(), '.0f'), 
+        #                     (bar.get_x() + bar.get_width() / 2, bar.get_height()), 
+        #                     ha='center', va='center', 
+        #                     size=10, xytext=(0, 8), 
+        #                     textcoords='offset points')
+                          
+        #     col6.pyplot(fig)
+        #     # Mini planilha com categorias por atendente
+        #     st.subheader("Categorias por Atendente")
+        #     categories_by_attendant = painel_df.groupby(['Atendente', 'Categoria']).size().unstack(fill_value=0)
+        #     st.write(categories_by_attendant)
+            
+        # with tab_detalhamento:
+        #     st.subheader("Detalhamento por Atendente (Chamados Criados)")
+
+        #     # Filtrar para mostrar somente chamados criados pelo próprio atendente
+        #     painel_df = worksheet_df[worksheet_df['Origem do Chamado'] == 'Painel do Atendente']
+
+        #     # Lista de atendentes que realmente criaram chamados
+        #     attendants_options = painel_df['Atendente'].unique()
+
+        #     # Seletor de Atendente
+        #     selected_attendant = st.selectbox(
+        #         "Selecione o Atendente",
+        #         attendants_options,
+        #         key="select_atendente_criado"
+        #     )
+
+        #     # Filtrar somente para o atendente selecionado
+        #     df_attendant = painel_df[painel_df['Atendente'] == selected_attendant]
+
+        #     # Contagem de chamadas por categoria para esse atendente
+        #     category_counts = df_attendant['Categoria'].value_counts()
+
+        #     # Layout em colunas
+        #     col1, col2 = st.columns(2)
+
+        #     # 1) Tabela com contagem de categorias
+        #     col1.subheader(f"Contagem de Categorias (Criados por {selected_attendant})")
+        #     col1.write(category_counts)
+
+        #     # 2) Gráfico de barras com contagem de categorias
+        #     col2.subheader(f"Gráfico de Categorias (Criados por {selected_attendant})")
+        #     fig, ax = plt.subplots()
+        #     bars = category_counts.plot(kind='bar', ax=ax, color='skyblue', edgecolor='black')
+        #     ax.set_xlabel("Categoria")
+        #     ax.set_ylabel("Contagem")
+        #     ax.set_title(f"Chamados criados por {selected_attendant}")
+
+        #     # Adiciona os valores acima das barras
+        #     for bar in bars.patches:
+        #         ax.annotate(format(bar.get_height(), '.0f'),
+        #                     (bar.get_x() + bar.get_width() / 2, bar.get_height()),
+        #                     ha='center', va='bottom',
+        #                     size=10, xytext=(0, 5),
+        #                     textcoords='offset points')
+
+        #     col2.pyplot(fig)
+        
+        with tab3:
+            # Filtrar os chamados criados e respondidos pelo próprio atendente
+            painel_df = worksheet_df[
+                (worksheet_df['Atendente Criador'] == worksheet_df['Atendente']) & 
+                (worksheet_df['Origem do Chamado'] == 'Painel do Atendente')
+            ]
+
+            # Contagem por atendente
             painel_attendant_counts = painel_df['Atendente'].value_counts()
 
-            # Criação de colunas para layout
-            col5, col6 = st.columns(2)
+            col1, col2 = st.columns(2)
+            col1.subheader('Contagem de Chamados Criados por cada Atendente')
+            col1.write(painel_attendant_counts)
 
-            # Exibição da tabela de contagem
-            col5.subheader('Contagem de Atendentes (Painel do Atendente)')
-            col5.write(painel_attendant_counts)
-
-            # Criação do gráfico
-            col6.subheader('Gráfico de Atendentes')
+            col2.subheader('Gráfico de Atendentes')
             fig, ax = plt.subplots()
             bars = painel_attendant_counts.plot(kind='bar', ax=ax, color='skyblue', edgecolor='black')
             ax.set_xlabel('Atendente')
             ax.set_ylabel('Contagem')
-            ax.set_title('Quantidade de Atendimentos criados pelo proprio atendente')
-            # Adicionando os valores no topo de cada barra
-            for bar in bars.patches:
-                ax.annotate(format(bar.get_height(), '.0f'), 
-                            (bar.get_x() + bar.get_width() / 2, bar.get_height()), 
-                            ha='center', va='center', 
-                            size=10, xytext=(0, 8), 
-                            textcoords='offset points')
-                          
-            col6.pyplot(fig)
-            # Mini planilha com categorias por atendente
-            st.subheader("Categorias por Atendente")
-            categories_by_attendant = painel_df.groupby(['Atendente', 'Categoria']).size().unstack(fill_value=0)
-            st.write(categories_by_attendant)
-            
-        with tab_detalhamento:
-            st.subheader("Detalhamento por Atendente (Chamados Criados)")
+            ax.set_title('Quantidade de chamados')
 
-            # Filtrar para mostrar somente chamados criados pelo próprio atendente
-            painel_df = worksheet_df[worksheet_df['Origem do Chamado'] == 'Painel do Atendente']
-
-            # Lista de atendentes que realmente criaram chamados
-            attendants_options = painel_df['Atendente'].unique()
-
-            # Seletor de Atendente
-            selected_attendant = st.selectbox(
-                "Selecione o Atendente",
-                attendants_options,
-                key="select_atendente_criado"
-            )
-
-            # Filtrar somente para o atendente selecionado
-            df_attendant = painel_df[painel_df['Atendente'] == selected_attendant]
-
-            # Contagem de chamadas por categoria para esse atendente
-            category_counts = df_attendant['Categoria'].value_counts()
-
-            # Layout em colunas
-            col1, col2 = st.columns(2)
-
-            # 1) Tabela com contagem de categorias
-            col1.subheader(f"Contagem de Categorias (Criados por {selected_attendant})")
-            col1.write(category_counts)
-
-            # 2) Gráfico de barras com contagem de categorias
-            col2.subheader(f"Gráfico de Categorias (Criados por {selected_attendant})")
-            fig, ax = plt.subplots()
-            bars = category_counts.plot(kind='bar', ax=ax, color='skyblue', edgecolor='black')
-            ax.set_xlabel("Categoria")
-            ax.set_ylabel("Contagem")
-            ax.set_title(f"Chamados criados por {selected_attendant}")
-
-            # Adiciona os valores acima das barras
             for bar in bars.patches:
                 ax.annotate(format(bar.get_height(), '.0f'),
                             (bar.get_x() + bar.get_width() / 2, bar.get_height()),
@@ -209,11 +239,42 @@ if uploaded_file is not None:
                             textcoords='offset points')
 
             col2.pyplot(fig)
+            
+        with tab_detalhamento:
+            st.subheader("Detalhamento de cada Chamado Criado por cada Atendente")
 
-            # Verificar: tabela pivotada com Atendente vs Categoria
-            # st.subheader("Detalhamento de Chamados (Pivot)")
-            # categories_by_attendant = df_attendant.groupby(['Atendente', 'Categoria']).size().unstack(fill_value=0)
-            # st.write(categories_by_attendant)
+            # Filtrar os chamados corretamente
+            painel_df = worksheet_df[
+                (worksheet_df['Atendente Criador'] == worksheet_df['Atendente']) & 
+                (worksheet_df['Origem do Chamado'] == 'Painel do Atendente')
+            ]
+
+            attendants_options = painel_df['Atendente'].unique()
+            selected_attendant = st.selectbox("Selecione o Atendente", attendants_options)
+
+            df_attendant = painel_df[painel_df['Atendente'] == selected_attendant]
+            category_counts = df_attendant['Categoria'].value_counts()
+
+            col1, col2 = st.columns(2)
+            col1.subheader(f"Contagem de Categorias ({selected_attendant})")
+            col1.write(category_counts)
+
+            col2.subheader(f"Gráfico de Categorias ({selected_attendant})")
+            fig, ax = plt.subplots()
+            bars = category_counts.plot(kind='bar', ax=ax, color='skyblue', edgecolor='black')
+            ax.set_xlabel("Categoria")
+            ax.set_ylabel("Contagem")
+            ax.set_title(f"Chamados de {selected_attendant}")
+
+            for bar in bars.patches:
+                ax.annotate(format(bar.get_height(), '.0f'),
+                            (bar.get_x() + bar.get_width() / 2, bar.get_height()),
+                            ha='center', va='bottom',
+                            size=10, xytext=(0, 5),
+                            textcoords='offset points')
+
+            col2.pyplot(fig)   
+        
         with tab4:
             # Contagem das ocorrências de cada situação
             situacao_counts = worksheet_df['Última Situação'].value_counts()
@@ -222,7 +283,7 @@ if uploaded_file is not None:
             col7, col8 = st.columns(2)
             
             # Exibição da tabela de contagem
-            col7.subheader('Contagem por Última Situação')
+            col7.subheader('Contagem por Situação dos Chamados')
             col7.write(situacao_counts)
             
             # Criação do gráfico
@@ -251,11 +312,11 @@ if uploaded_file is not None:
             col9, col10 = st.columns(2)
             
             # Exibição da tabela de contagem
-            col9.subheader('Contagem de Atendentes (Treinamento)')
+            col9.subheader('Contagem de Criação de Chamados Refrentes a Treinamento')
             col9.write(treinamento_attendant_counts)
             
             # Criação do gráfico
-            col10.subheader('Gráfico de Atendentes (Treinamento)')
+            col10.subheader('Gráfico de (Treinamento)')
             fig, ax = plt.subplots()
             bars = treinamento_attendant_counts.plot(kind='bar', ax=ax)
             ax.set_xlabel('Atendente')
@@ -275,7 +336,7 @@ if uploaded_file is not None:
             col10, col11 = st.columns(2)
             
             with col10:
-                st.subheader('Dados da aba Comparativo')
+                st.subheader('Dados dos anos e meses de 2024 e 2025')
                 st.write(comparativo_df)
             
             with col11:
