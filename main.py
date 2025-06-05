@@ -433,7 +433,7 @@ if uploaded_file is not None:
                 )
                 st.plotly_chart(fig_totais_categoria)
             else:
-                st.info('Por favor, selecione pelo menos uma categoria.')
+                st.info('Por favor, selecione pelo menos uma categoria')
 else:   
          st.warning('Por favor, faça o upload de um arquivo Excel.')
               
