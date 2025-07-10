@@ -84,6 +84,10 @@ if uploaded_file is not None:
             col_sup1.subheader('Contagem de Categorias')
             col_sup1.write(category_counts_sup)
             
+            # Exibir o total geral
+            total_geral = category_counts_sup.sum()
+            col_sup1.markdown(f"**Total Geral de Chamados:** {total_geral}")
+            
             # Criação do gráfico
             col_sup2.subheader('Gráfico de Categorias')
             fig_sup, ax_sup = plt.subplots()
@@ -99,6 +103,7 @@ if uploaded_file is not None:
                                 textcoords='offset points')
             # Exibir gráfico no Streamlit
             col_sup2.pyplot(fig_sup)
+
     
         with tab2:
             # Contagem das ocorrências de cada atendente
