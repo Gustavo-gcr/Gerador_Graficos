@@ -13,10 +13,14 @@ st.title('Relatório Mensal TomTicket')
 # Upload do arquivo Excel
 uploaded_file = st.file_uploader("Escolha o arquivo Excel", type="xlsx")
 
+# Definição das cores da LCM Construção
+lcm_light_green = '#78B94B'
+lcm_dark_green = '#4D8337'
+lcm_gray = '#686868'
+
 if uploaded_file is not None:
     # Leitura das abas do arquivo Excel
     xls = pd.ExcelFile(uploaded_file)
-    
     
     # Leitura da aba "Comparativo" sem pular linhas
     comparativo_df = pd.read_excel(xls, sheet_name='Comparativo')
@@ -37,7 +41,7 @@ if uploaded_file is not None:
     required_columns = ['Categoria', 'Atendente', 'Origem do Chamado', 'Última Situação']
     if all(col in worksheet_df.columns for col in required_columns):
         # Criação das abas
-        tab1,tab_super, tab2, tab3,tab_detalhamento, tab4, tab5, tab6, tab7, tab8  = st.tabs(["Análise por Categoria","Análise por Categoria Superintendente", "Análise por Atendente", "Painel do Atendente","Detalhamento por Atendente","Situação", "Treinamento", "Comparativo Total Anual", "Comparativo Mês Anual", "Comparativo Categorias Anual"])  
+        tab1, tab_super, tab2, tab3, tab_detalhamento, tabcatego, tab4, tab5, tab6, tab7, tab8 = st.tabs(["Análise por Categoria", "Análise por Categoria Superintendente", "Análise por Atendente", "Painel do Atendente", "Detalhamento por Atendente", "Categorias por Atendente", "Situação", "Treinamento", "Comparativo Total Anual", "Comparativo Mês Anual", "Comparativo Categorias Anual"]) 
         with tab1:
             # Contagem das ocorrências de cada categoria
             category_counts = worksheet_df['Categoria'].value_counts()
@@ -49,22 +53,26 @@ if uploaded_file is not None:
             col1.subheader('Contagem Chamados por Categorias')
             col1.write(category_counts)
             
-            # Criação do gráfico
+            # Criação do gráfico - Aumentando o tamanho da figura
             col2.subheader('Gráfico de Categorias')
-            fig, ax = plt.subplots()
-            bars = category_counts.plot(kind='bar', ax=ax)
+            fig, ax = plt.subplots(figsize=(12, 7)) # Aumento da largura e altura da figura
+            bars = category_counts.plot(kind='bar', ax=ax, color=lcm_light_green, edgecolor='black', linewidth=1)
             ax.set_xlabel('Categoria')
             ax.set_ylabel('Contagem')
             
-            # Adicionando os valores no topo de cada barra
+            # Ajustando o layout e a rotação dos rótulos para melhor leitura
+            plt.xticks(rotation=90, ha='right')
+            plt.tight_layout()
+            
+            # Adicionando os valores no topo de cada barra com ajuste de posição
             for bar in bars.patches:
                 ax.annotate(format(bar.get_height(), '.0f'), 
-                            (bar.get_x() + bar.get_width() / 2, bar.get_height()), 
-                            ha='center', va='center', 
-                            size=10, xytext=(0, 8), 
-                            textcoords='offset points')
+                                (bar.get_x() + bar.get_width() / 2, bar.get_height()), 
+                                ha='center', va='bottom', 
+                                size=10, xytext=(0, 5), # Mover o rótulo 5 pontos para cima
+                                textcoords='offset points')
                 
-            col2.pyplot(fig)   
+            col2.pyplot(fig) 
         
         with tab_super:
             st.subheader('Análise Quantidade de Categoria por Superintendente')
@@ -88,23 +96,27 @@ if uploaded_file is not None:
             total_geral = category_counts_sup.sum()
             col_sup1.markdown(f"**Total Geral de Chamados:** {total_geral}")
             
-            # Criação do gráfico
+            # Criação do gráfico - Aumentando o tamanho da figura
             col_sup2.subheader('Gráfico de Categorias')
-            fig_sup, ax_sup = plt.subplots()
-            category_counts_sup.plot(kind='bar', ax=ax_sup)
+            fig_sup, ax_sup = plt.subplots(figsize=(12, 7)) # Aumento da largura e altura da figura
+            category_counts_sup.plot(kind='bar', ax=ax_sup, color=lcm_light_green, edgecolor='black', linewidth=1)
             ax_sup.set_xlabel('Categoria')
             ax_sup.set_ylabel('Contagem')
-            # Adicionando os valores no topo de cada barra
+            
+            # Ajustando o layout e a rotação dos rótulos para melhor leitura
+            plt.xticks(rotation=90, ha='right')
+            plt.tight_layout()
+
+            # Adicionando os valores no topo de cada barra com ajuste de posição
             for bar in ax_sup.patches:
                 ax_sup.annotate(format(bar.get_height(), '.0f'),
                                 (bar.get_x() + bar.get_width() / 2, bar.get_height()),
                                 ha='center', va='bottom',
-                                fontsize=10, xytext=(0, 5),
+                                fontsize=10, xytext=(0, 5), # Mover o rótulo 5 pontos para cima
                                 textcoords='offset points')
             # Exibir gráfico no Streamlit
             col_sup2.pyplot(fig_sup)
 
-    
         with tab2:
             # Contagem das ocorrências de cada atendente
             attendant_counts = worksheet_df['Atendente'].value_counts()
@@ -116,21 +128,24 @@ if uploaded_file is not None:
             col3.subheader('Contagem de Chamados por cada Atendente')
             col3.write(attendant_counts)
             
-            # Criação do gráfico
+            # Criação do gráfico - Aumentando o tamanho da figura
             col4.subheader('Gráfico de Atendentes')
-            fig, ax = plt.subplots()
-            bars = attendant_counts.plot(kind='bar', ax=ax)
+            fig, ax = plt.subplots(figsize=(12, 7)) # Aumento da largura e altura da figura
+            bars = attendant_counts.plot(kind='bar', ax=ax, color=lcm_light_green, edgecolor='black', linewidth=1)
             ax.set_xlabel('Atendente')
             ax.set_ylabel('Contagem')
             
+            # Ajustando o layout e a rotação dos rótulos para melhor leitura
+            plt.xticks(rotation=90, ha='right')
+            plt.tight_layout()
             
-            # Adicionando os valores no topo de cada barra
+            # Adicionando os valores no topo de cada barra com ajuste de posição
             for bar in bars.patches:
                 ax.annotate(format(bar.get_height(), '.0f'), 
-                            (bar.get_x() + bar.get_width() / 2, bar.get_height()), 
-                            ha='center', va='center', 
-                            size=10, xytext=(0, 8), 
-                            textcoords='offset points')
+                                (bar.get_x() + bar.get_width() / 2, bar.get_height()), 
+                                ha='center', va='bottom', 
+                                size=10, xytext=(0, 5), # Mover o rótulo 5 pontos para cima
+                                textcoords='offset points')
                 
             col4.pyplot(fig)
         
@@ -149,18 +164,22 @@ if uploaded_file is not None:
             col1.write(painel_attendant_counts)
 
             col2.subheader('Gráfico de Atendentes')
-            fig, ax = plt.subplots()
-            bars = painel_attendant_counts.plot(kind='bar', ax=ax, color='skyblue', edgecolor='black')
+            fig, ax = plt.subplots(figsize=(12, 7)) # Aumento da largura e altura da figura
+            bars = painel_attendant_counts.plot(kind='bar', ax=ax, color=lcm_light_green, edgecolor='black', linewidth=1)
             ax.set_xlabel('Atendente')
             ax.set_ylabel('Contagem')
             ax.set_title('Quantidade de chamados')
+            
+            # Ajustando o layout e a rotação dos rótulos para melhor leitura
+            plt.xticks(rotation=90, ha='right')
+            plt.tight_layout()
 
             for bar in bars.patches:
                 ax.annotate(format(bar.get_height(), '.0f'),
-                            (bar.get_x() + bar.get_width() / 2, bar.get_height()),
-                            ha='center', va='bottom',
-                            size=10, xytext=(0, 5),
-                            textcoords='offset points')
+                                (bar.get_x() + bar.get_width() / 2, bar.get_height()),
+                                ha='center', va='bottom',
+                                size=10, xytext=(0, 5),
+                                textcoords='offset points')
 
             col2.pyplot(fig)
             
@@ -184,21 +203,57 @@ if uploaded_file is not None:
             col1.write(category_counts)
 
             col2.subheader(f"Gráfico de Categorias ({selected_attendant})")
-            fig, ax = plt.subplots()
-            bars = category_counts.plot(kind='bar', ax=ax, color='skyblue', edgecolor='black')
+            fig, ax = plt.subplots(figsize=(12, 7)) # Aumento da largura e altura da figura
+            bars = category_counts.plot(kind='bar', ax=ax, color=lcm_light_green, edgecolor='black', linewidth=1)
             ax.set_xlabel("Categoria")
             ax.set_ylabel("Contagem")
             ax.set_title(f"Chamados de {selected_attendant}")
+            
+            # Ajustando o layout e a rotação dos rótulos para melhor leitura
+            plt.xticks(rotation=90, ha='right')
+            plt.tight_layout()
 
             for bar in bars.patches:
                 ax.annotate(format(bar.get_height(), '.0f'),
-                            (bar.get_x() + bar.get_width() / 2, bar.get_height()),
-                            ha='center', va='bottom',
-                            size=10, xytext=(0, 5),
-                            textcoords='offset points')
+                                (bar.get_x() + bar.get_width() / 2, bar.get_height()),
+                                ha='center', va='bottom',
+                                size=10, xytext=(0, 5),
+                                textcoords='offset points')
 
-            col2.pyplot(fig)   
-        
+            col2.pyplot(fig) 
+        with tabcatego:
+            st.subheader("Categorias atendidas por cada Atendente")
+
+            attendants_options = worksheet_df['Atendente'].dropna().unique()
+            selected_attendant = st.selectbox("Selecione o Atendente", attendants_options, key="cat_atendente")
+
+            df_attendant = worksheet_df[worksheet_df['Atendente'] == selected_attendant]
+            category_counts = df_attendant['Categoria'].value_counts()
+
+            col1, col2 = st.columns(2)
+            col1.subheader(f"Contagem de Categorias Atendidas ({selected_attendant})")
+            col1.write(category_counts)
+
+            col2.subheader(f"Gráfico de Categorias Atendidas ({selected_attendant})")
+            fig, ax = plt.subplots(figsize=(12, 7)) # Aumento da largura e altura da figura
+            bars = category_counts.plot(kind='bar', ax=ax, color=lcm_light_green, edgecolor='black', linewidth=1)
+            ax.set_xlabel("Categoria")
+            ax.set_ylabel("Contagem")
+            ax.set_title(f"Categorias Atendidas por {selected_attendant}")
+            
+            # Ajustando o layout e a rotação dos rótulos para melhor leitura
+            plt.xticks(rotation=90, ha='right')
+            plt.tight_layout()
+
+            for bar in bars.patches:
+                ax.annotate(format(bar.get_height(), '.0f'),
+                                (bar.get_x() + bar.get_width() / 2, bar.get_height()),
+                                ha='center', va='bottom',
+                                size=10, xytext=(0, 5),
+                                textcoords='offset points')
+
+            col2.pyplot(fig)
+            
         with tab4:
             # Contagem das ocorrências de cada situação
             situacao_counts = worksheet_df['Última Situação'].value_counts()
@@ -210,20 +265,24 @@ if uploaded_file is not None:
             col7.subheader('Contagem por Situação dos Chamados')
             col7.write(situacao_counts)
             
-            # Criação do gráfico
+            # Criação do gráfico - Aumentando o tamanho da figura
             col8.subheader('Gráfico de Última Situação')
-            fig, ax = plt.subplots()
-            bars = situacao_counts.plot(kind='bar', ax=ax)
+            fig, ax = plt.subplots(figsize=(12, 7)) # Aumento da largura e altura da figura
+            bars = situacao_counts.plot(kind='bar', ax=ax, color=lcm_light_green, edgecolor='black', linewidth=1)
             ax.set_xlabel('Última Situação')
             ax.set_ylabel('Contagem')
             
-            # Adicionando os valores no topo de cada barra
+            # Ajustando o layout e a rotação dos rótulos para melhor leitura
+            plt.xticks(rotation=90, ha='right')
+            plt.tight_layout()
+
+            # Adicionando os valores no topo de cada barra com ajuste de posição
             for bar in bars.patches:
                 ax.annotate(format(bar.get_height(), '.0f'), 
-                            (bar.get_x() + bar.get_width() / 2, bar.get_height()), 
-                            ha='center', va='center', 
-                            size=10, xytext=(0, 8), 
-                            textcoords='offset points')      
+                                (bar.get_x() + bar.get_width() / 2, bar.get_height()), 
+                                ha='center', va='bottom', 
+                                size=10, xytext=(0, 5), 
+                                textcoords='offset points')
             col8.pyplot(fig)
         with tab5:
             # Filtrando os dados pela coluna "Categoria" para "Treinamento"
@@ -239,20 +298,24 @@ if uploaded_file is not None:
             col9.subheader('Contagem de Criação de Chamados Refrentes a Treinamento')
             col9.write(treinamento_attendant_counts)
             
-            # Criação do gráfico
+            # Criação do gráfico - Aumentando o tamanho da figura
             col10.subheader('Gráfico de (Treinamento)')
-            fig, ax = plt.subplots()
-            bars = treinamento_attendant_counts.plot(kind='bar', ax=ax)
+            fig, ax = plt.subplots(figsize=(12, 7)) # Aumento da largura e altura da figura
+            bars = treinamento_attendant_counts.plot(kind='bar', ax=ax, color=lcm_light_green, edgecolor='black', linewidth=1)
             ax.set_xlabel('Atendente')
             ax.set_ylabel('Contagem')
             
-            # Adicionando os valores no topo de cada barra
+            # Ajustando o layout e a rotação dos rótulos para melhor leitura
+            plt.xticks(rotation=90, ha='right')
+            plt.tight_layout()
+            
+            # Adicionando os valores no topo de cada barra com ajuste de posição
             for bar in bars.patches:
                 ax.annotate(format(bar.get_height(), '.0f'), 
-                            (bar.get_x() + bar.get_width() / 2, bar.get_height()), 
-                            ha='center', va='center', 
-                            size=10, xytext=(0, 8), 
-                            textcoords='offset points')
+                                (bar.get_x() + bar.get_width() / 2, bar.get_height()), 
+                                ha='center', va='bottom', 
+                                size=10, xytext=(0, 5), 
+                                textcoords='offset points')
                 
             col10.pyplot(fig)
         with tab6:
@@ -269,8 +332,9 @@ if uploaded_file is not None:
                     # Plotar os gráficos para os dados de 2024 e 2025
                     st.subheader('Comparativo de Chamados 2024 vs 2025')
                     
-                    fig, ax = plt.subplots(figsize=(10, 6))
-                    comparativo_df.plot(x='Mês', y=['ano 2024', 'ano 2025'], kind='bar', ax=ax)
+                    fig, ax = plt.subplots(figsize=(12, 7)) # Aumento da largura e altura da figura
+                    # Definindo as cores para as barras de cada ano
+                    comparativo_df.plot(x='Mês', y=['ano 2024', 'ano 2025'], kind='bar', ax=ax, color=[lcm_light_green, lcm_dark_green], edgecolor='black', linewidth=1) 
                     ax.set_xlabel('Mês')
                     ax.set_ylabel('Quantidade de Chamados')
                     ax.set_title('Comparativo de Chamados por Mês: 2024 vs 2025')
@@ -293,6 +357,10 @@ if uploaded_file is not None:
             selected_month = st.selectbox('Selecione o mês', meses)
             
             fig = go.Figure()
+
+            # Dicionário de cores para os anos
+            ano_colors = {2024: lcm_light_green, 2025: lcm_dark_green}
+
             for ano in anos:
                 df_ano = comparativo_detalhado_df[comparativo_detalhado_df['Ano'] == ano]
                 df_mes = df_ano[df_ano['Mês'] == selected_month]
@@ -302,7 +370,8 @@ if uploaded_file is not None:
                         x=[selected_month],
                         y=[total_chamados],
                         name=f"{selected_month} {ano}",
-                        width=0.3  # Ajuste da largura da barra
+                        width=0.3, # Ajuste da largura da barra
+                        marker=dict(color=ano_colors.get(ano), line=dict(color='black', width=1))
                     ))
             
             fig.update_layout(
@@ -316,10 +385,10 @@ if uploaded_file is not None:
             col1, col2, col3 = st.columns([1.5, 0.75, 0.75])
             
             with col1:
-                st.plotly_chart(fig)      
+                st.plotly_chart(fig)
             with col2:
                 if selected_month:
-                    st.subheader(f'(2024)')
+                    st.subheader(f'2024 ({selected_month})')
                     
                     # Contagem de categorias para 2024
                     categoria_counts_2024 = comparativo_detalhado_df[(comparativo_detalhado_df['Mês'] == selected_month) & (comparativo_detalhado_df['Ano'] == 2024)].sum(numeric_only=True)
@@ -328,9 +397,9 @@ if uploaded_file is not None:
                     st.write(categoria_counts_2024)
             with col3:
                 if selected_month:
-                    st.subheader(f'(2025)')
+                    st.subheader(f'2025 ({selected_month})')
                     
-                    # Contagem de categorias para 2024
+                    # Contagem de categorias para 2025
                     categoria_counts_2025 = comparativo_detalhado_df[(comparativo_detalhado_df['Mês'] == selected_month) & (comparativo_detalhado_df['Ano'] == 2025)].sum(numeric_only=True)
                     
                     # Exibição das contagens detalhadas em caixas
@@ -341,13 +410,13 @@ if uploaded_file is not None:
             st.subheader('Análise de Categorias')
 
             # Verificar se 'Categoria' pode ser representado pelas colunas do DataFrame
-            categorias = comparativo_detalhado_df.columns[3:]  # Ajuste o índice conforme necessário para excluir 'Mês' e 'Ano'
+            categorias = comparativo_detalhado_df.columns[3:]
             
             # Seletor de categorias (várias opções)
             selected_categories = st.multiselect('Selecione as categorias', categorias)
             
             # Seletor de ano(s)
-            selected_years = [2024, 2025]  # Definido para os anos 2024 e 2025
+            selected_years = [2024, 2025]
 
             if selected_categories:
                 # Filtrar os dados para as categorias selecionadas
@@ -370,29 +439,24 @@ if uploaded_file is not None:
                 # Criar uma nova coluna para combinar mês e ano
                 df_melted['Mês_Ano'] = df_melted.apply(lambda row: f"{row['Mês']:02d}/{row['Ano']}", axis=1)
 
-                # Definir uma lista de cores
-                colors = [
-                     '#A6CEE3', '#1F78B4',  '#33A02C', '#FB9A99', '#E31A1C', '#FDBF6F', '#FF7F00', '#CAB2D6', '#6A3D9A',
-    '#FFFF99', '#B15928', '#FFB3B3', '#BEBADA', '#FB8072', '#80B1D3', '#FDB462', '#B3DE69', '#FCCDE5', '#D9D9D9',
-    '#BC80BD', '#CCEBC5', '#FFED6F', '#9E0142', '#D53E4F', '#F46D43', '#FDAE61', '#FEE08B', '#E6F598', '#ABDDA4',
-    '#66C2A5', '#3288BD', '#5E4FA2', '#9E9AC8', '#B3CDE3', '#CCEBC5', '#DECBE4', '#FED9A6', '#FFFFCC', '#E5D8BD',
-    '#FDDAEC', '#F2F2F2', '#B2182B', '#D6604D', '#F4A582', '#FDDBC7', '#GCRG10','#D1E5F0', '#92C5DE', '#4393C3', '#2166AC'
-                ]
-                
                 # Criar gráfico de barras empilhadas (Evolução mensal)
                 fig = go.Figure()
+                
+                # Dicionário de cores para os anos
+                ano_colors = {2024: lcm_light_green, 2025: lcm_dark_green}
 
                 # Adicionar traços de barras empilhadas para cada categoria e ano
                 for i, categoria in enumerate(selected_categories):
                     for ano in selected_years:
                         df_categoria_ano = df_melted[(df_melted['Categoria'] == categoria) & (df_melted['Ano'] == ano)]
+                        
                         fig.add_trace(go.Bar(
                             x=df_categoria_ano['Mês_Ano'],
                             y=df_categoria_ano['Quantidade'],
                             name=f'{categoria} {ano}',
                             text=df_categoria_ano['Quantidade'],
                             textposition='auto',
-                            marker=dict(color=colors[i % len(colors)])
+                            marker=dict(color=ano_colors.get(ano), line=dict(color='black', width=1))
                         ))
                 
                 # Configurar layout do gráfico de barras empilhadas
@@ -400,14 +464,14 @@ if uploaded_file is not None:
                     title='Evolução das Categorias por Mês (2024-2025)',
                     xaxis_title='Mês/Ano',
                     yaxis_title='Quantidade',
-                    barmode='stack',  # Empilha as barras
+                    barmode='stack', 
                     xaxis=dict(
                         tickmode='array',
                         tickvals=[f"{month:02d}/2024" for month in range(1, 13)] + [f"{month:02d}/2025" for month in range(1, 13)],
                         ticktext=['janeiro 2024', 'fevereiro 2024', 'março 2024', 'abril 2024', 'maio 2024', 'junho 2024',
-                                'julho 2024', 'agosto 2024', 'setembro 2024', 'outubro 2024', 'novembro 2024', 'dezembro 2024',
-                                'janeiro 2025', 'fevereiro 2025', 'março 2025', 'abril 2025', 'maio 2025', 'junho 2025',
-                                'julho 2025', 'agosto 2025', 'setembro 2025', 'outubro 2025', 'novembro 2025', 'dezembro 2025']
+                                 'julho 2024', 'agosto 2024', 'setembro 2024', 'outubro 2024', 'novembro 2024', 'dezembro 2024',
+                                 'janeiro 2025', 'fevereiro 2025', 'março 2025', 'abril 2025', 'maio 2025', 'junho 2025',
+                                 'julho 2025', 'agosto 2025', 'setembro 2025', 'outubro 2025', 'novembro 2025', 'dezembro 2025']
                     ),
                     legend_title='Categoria e Ano'
                 )
@@ -418,27 +482,32 @@ if uploaded_file is not None:
 
                 # Criar gráfico de barras (Totais anuais por categoria)
                 fig_totais_categoria = go.Figure()
-                # Adicionar traços para cada categoria
-                for categoria in selected_categories:
-                    if categoria in total_ano_categoria.columns:
+                
+                # Dicionário para mapear as cores por ano
+                colors_by_year = {2024: lcm_light_green, 2025: lcm_dark_green}
+                
+                # Adicionar traços para cada ano
+                for ano in selected_years:
+                    if ano in total_ano_categoria.index:
                         fig_totais_categoria.add_trace(go.Bar(
-                            x=total_ano_categoria.index,
-                            y=total_ano_categoria[categoria],
-                            name=categoria,
-                            text=total_ano_categoria[categoria],
-                            textposition='auto'
+                            x=total_ano_categoria.columns,
+                            y=total_ano_categoria.loc[ano],
+                            name=str(ano),
+                            text=total_ano_categoria.loc[ano],
+                            textposition='auto',
+                            marker=dict(color=colors_by_year[ano], line=dict(color='black', width=1))
                         ))
+
                 # Configurar layout do gráfico de totais anuais por categoria
                 fig_totais_categoria.update_layout(
                     title='Comparação Total por Categoria (2024 vs 2025)',
-                    xaxis_title='Ano',
+                    xaxis_title='Categoria',
                     yaxis_title='Quantidade Total',
                     barmode='group',
-                    legend_title='Categoria'
+                    legend_title='Ano'
                 )
                 st.plotly_chart(fig_totais_categoria)
             else:
                 st.info('Por favor, selecione pelo menos uma categoria')
-else:   
-         st.warning('Por favor, faça o upload de um arquivo Excel.')
-              
+else:
+    st.warning('Por favor, faça o upload de um arquivo Excel.')
