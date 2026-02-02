@@ -323,21 +323,21 @@ if uploaded_file is not None:
             col10, col11 = st.columns(2)
             
             with col10:
-                st.subheader('Dados dos anos e meses de 2024 e 2025')
+                st.subheader('Dados dos anos e meses de 2025 e 2026')
                 st.write(comparativo_df)
             
             with col11:
-                # Verificação se as colunas '2024' e '2025' estão presentes
-                if 'ano 2024' in comparativo_df.columns and 'ano 2025' in comparativo_df.columns:
-                    # Plotar os gráficos para os dados de 2024 e 2025
-                    st.subheader('Comparativo de Chamados 2024 vs 2025')
+                # Verificação se as colunas '2025' e '2026' estão presentes
+                if 'ano 2025' in comparativo_df.columns and 'ano 2026' in comparativo_df.columns:
+                    # Plotar os gráficos para os dados de 2025 e 2026
+                    st.subheader('Comparativo de Chamados 2025 vs 2026')
                     
                     fig, ax = plt.subplots(figsize=(12, 7)) # Aumento da largura e altura da figura
                     # Definindo as cores para as barras de cada ano
-                    comparativo_df.plot(x='Mês', y=['ano 2024', 'ano 2025'], kind='bar', ax=ax, color=[lcm_light_green, lcm_dark_green], edgecolor='black', linewidth=1) 
+                    comparativo_df.plot(x='Mês', y=['ano 2025', 'ano 2026'], kind='bar', ax=ax, color=[lcm_light_green, lcm_dark_green], edgecolor='black', linewidth=1) 
                     ax.set_xlabel('Mês')
                     ax.set_ylabel('Quantidade de Chamados')
-                    ax.set_title('Comparativo de Chamados por Mês: 2024 vs 2025')
+                    ax.set_title('Comparativo de Chamados por Mês: 2025 vs 2026')
                     
                     # Adicionando os valores no topo de cada barra
                     for container in ax.containers:
@@ -345,7 +345,7 @@ if uploaded_file is not None:
                     
                     st.pyplot(fig)
                 else:
-                    st.error('As colunas "2024" e/ou "2025" não foram encontradas na aba "Comparativo".')
+                    st.error('As colunas "2025" e/ou "2026" não foram encontradas na aba "Comparativo".')
         with tab7:
             # Criação do gráfico de comparação
             st.subheader('Comparativo de Chamados por Mês entre Anos')
@@ -359,7 +359,7 @@ if uploaded_file is not None:
             fig = go.Figure()
 
             # Dicionário de cores para os anos
-            ano_colors = {2024: lcm_light_green, 2025: lcm_dark_green}
+            ano_colors = {2025: lcm_light_green, 2026: lcm_dark_green}
 
             for ano in anos:
                 df_ano = comparativo_detalhado_df[comparativo_detalhado_df['Ano'] == ano]
@@ -388,15 +388,6 @@ if uploaded_file is not None:
                 st.plotly_chart(fig)
             with col2:
                 if selected_month:
-                    st.subheader(f'2024 ({selected_month})')
-                    
-                    # Contagem de categorias para 2024
-                    categoria_counts_2024 = comparativo_detalhado_df[(comparativo_detalhado_df['Mês'] == selected_month) & (comparativo_detalhado_df['Ano'] == 2024)].sum(numeric_only=True)
-                    
-                    # Exibição das contagens detalhadas em caixas
-                    st.write(categoria_counts_2024)
-            with col3:
-                if selected_month:
                     st.subheader(f'2025 ({selected_month})')
                     
                     # Contagem de categorias para 2025
@@ -404,6 +395,15 @@ if uploaded_file is not None:
                     
                     # Exibição das contagens detalhadas em caixas
                     st.write(categoria_counts_2025)
+            with col3:
+                if selected_month:
+                    st.subheader(f'2026 ({selected_month})')
+                    
+                    # Contagem de categorias para 2026
+                    categoria_counts_2026 = comparativo_detalhado_df[(comparativo_detalhado_df['Mês'] == selected_month) & (comparativo_detalhado_df['Ano'] == 2026)].sum(numeric_only=True)
+                    
+                    # Exibição das contagens detalhadas em caixas
+                    st.write(categoria_counts_2026)
                 else:
                     st.error("A aba 'Comparativo Detalhado' não foi encontrada no arquivo Excel.")
         with tab8:
@@ -416,7 +416,7 @@ if uploaded_file is not None:
             selected_categories = st.multiselect('Selecione as categorias', categorias)
             
             # Seletor de ano(s)
-            selected_years = [2024, 2025]
+            selected_years = [2025, 2026]
 
             if selected_categories:
                 # Filtrar os dados para as categorias selecionadas
@@ -443,7 +443,7 @@ if uploaded_file is not None:
                 fig = go.Figure()
                 
                 # Dicionário de cores para os anos
-                ano_colors = {2024: lcm_light_green, 2025: lcm_dark_green}
+                ano_colors = {2025: lcm_light_green, 2026: lcm_dark_green}
 
                 # Adicionar traços de barras empilhadas para cada categoria e ano
                 for i, categoria in enumerate(selected_categories):
@@ -461,17 +461,17 @@ if uploaded_file is not None:
                 
                 # Configurar layout do gráfico de barras empilhadas
                 fig.update_layout(
-                    title='Evolução das Categorias por Mês (2024-2025)',
+                    title='Evolução das Categorias por Mês (2025-2026)',
                     xaxis_title='Mês/Ano',
                     yaxis_title='Quantidade',
                     barmode='stack', 
                     xaxis=dict(
                         tickmode='array',
-                        tickvals=[f"{month:02d}/2024" for month in range(1, 13)] + [f"{month:02d}/2025" for month in range(1, 13)],
-                        ticktext=['janeiro 2024', 'fevereiro 2024', 'março 2024', 'abril 2024', 'maio 2024', 'junho 2024',
-                                 'julho 2024', 'agosto 2024', 'setembro 2024', 'outubro 2024', 'novembro 2024', 'dezembro 2024',
-                                 'janeiro 2025', 'fevereiro 2025', 'março 2025', 'abril 2025', 'maio 2025', 'junho 2025',
-                                 'julho 2025', 'agosto 2025', 'setembro 2025', 'outubro 2025', 'novembro 2025', 'dezembro 2025']
+                        tickvals=[f"{month:02d}/2025" for month in range(1, 13)] + [f"{month:02d}/2026" for month in range(1, 13)],
+                        ticktext=['janeiro 2025', 'fevereiro 2025', 'março 2025', 'abril 2025', 'maio 2025', 'junho 2025',
+                                 'julho 2025', 'agosto 2025', 'setembro 2025', 'outubro 2025', 'novembro 2025', 'dezembro 2025',
+                                 'janeiro 2026', 'fevereiro 2026', 'março 2026', 'abril 2026', 'maio 2026', 'junho 2026',
+                                 'julho 2026', 'agosto 2026', 'setembro 2026', 'outubro 2026', 'novembro 2026', 'dezembro 2026']
                     ),
                     legend_title='Categoria e Ano'
                 )
@@ -484,7 +484,7 @@ if uploaded_file is not None:
                 fig_totais_categoria = go.Figure()
                 
                 # Dicionário para mapear as cores por ano
-                colors_by_year = {2024: lcm_light_green, 2025: lcm_dark_green}
+                colors_by_year = {2025: lcm_light_green, 2026: lcm_dark_green}
                 
                 # Adicionar traços para cada ano
                 for ano in selected_years:
@@ -500,7 +500,7 @@ if uploaded_file is not None:
 
                 # Configurar layout do gráfico de totais anuais por categoria
                 fig_totais_categoria.update_layout(
-                    title='Comparação Total por Categoria (2024 vs 2025)',
+                    title='Comparação Total por Categoria (2025 vs 2026)',
                     xaxis_title='Categoria',
                     yaxis_title='Quantidade Total',
                     barmode='group',
